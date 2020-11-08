@@ -30,10 +30,23 @@ export async function updateUser(user) {
 }
 
 export async function getUser(email, password) {
+  const users = await _getAllUser();
+  const user = users.find((user) => user.email === email);
+  if (!(user instanceof Object)) return [];
+
   const response = await fetch(
-    `http://localhost:3001/users?email=${email}&password=${password}`
+    `http://localhost:3001/users?email=${user.email}&password=${password}`
   );
 
+  if (!response.ok) throw response;
+
+  const json = await response.json();
+  if (json.length) return json;
+  throw new Error("the email or password is not correct");
+}
+
+async function _getAllUser() {
+  const response = await fetch("http://localhost:3001/users");
   if (response.ok) return response.json();
   throw response;
 }
