@@ -1,0 +1,24 @@
+.spinner::before {
+  animation: 1.5s linear infinite animateSpinner;
+  animation-play-state: inherit;
+  border: solid 5px #cfd0d1;
+  border-bottom-color: $spinner;
+  border-radius: 50%;
+  content: "";
+  height: rem(80);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: rem(80);
+  will-change: transform;
+}
+
+@keyframes animateSpinner {
+  0% {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
