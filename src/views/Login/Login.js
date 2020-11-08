@@ -3,6 +3,7 @@ import moment from "moment";
 import PadlockIcon from "../../components/icons/PadlockIcon";
 import TextInput from "../../components/commons/TextInput";
 import Spinner from "../../components/commons/Spinner";
+import FeedbackErrors from "../../components/commons/FeedbackErrors";
 
 import { saveUser, getUser, updateUser } from "./../../services/userService";
 
@@ -32,6 +33,9 @@ const Login = () => {
   const [status, setStatus] = useState(STATUS.INITIAL);
   const [time, setTime] = useState(TIME);
 
+  const errorsForm = getErrorForm(emptyUser);
+  const isValid = Object.keys(errorsForm).length === 0;
+
   const onChange = (event) => {
     setUser((prevState) => {
       return {
@@ -42,28 +46,32 @@ const Login = () => {
   };
 
   const onSubmit = async (event) => {
-    setLoading(true);
     event.preventDefault();
-
     setStatus(STATUS.SUBMITTING);
 
-    try {
-      const response = await getUser(user.email, user.password);
-      if (response.length) {
-        const { timestamp } = response[0];
-        const data = await updateUser(response[0]);
+    if (isValid) {
+      setLoading(true);
 
-        getDifferenceTime(data, timestamp);
+      try {
+        const response = await getUser(user.email, user.password);
+        if (response.length) {
+          const { timestamp } = response[0];
+          const data = await updateUser(response[0]);
 
-        setStatus(STATUS.COMPLETED);
-      } else {
-        await saveUser(user);
-        setStatus(STATUS.COMPLETED);
+          getDifferenceTime(data, timestamp);
+
+          setStatus(STATUS.COMPLETED);
+        } else {
+          await saveUser(user);
+          setStatus(STATUS.COMPLETED);
+        }
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
+    } else {
+      setStatus(STATUS.SUBMITTED);
     }
   };
 
@@ -92,6 +100,13 @@ const Login = () => {
     });
   }
 
+  function getErrorForm(user) {
+    const result = {};
+    if (!user.email) result.email = "email is required";
+    if (!user.password) result.password = "password is required";
+    return result;
+  }
+
   if (error) throw error;
   if (loading) return <Spinner />;
 
@@ -109,6 +124,9 @@ const Login = () => {
         </div>
       ) : (
         <div className='form'>
+          {!isValid && status === STATUS.SUBMITTED && (
+            <FeedbackErrors errorsForm={errorsForm} />
+          )}
           <PadlockIcon />
           <form onSubmit={onSubmit}>
             <TextInput
