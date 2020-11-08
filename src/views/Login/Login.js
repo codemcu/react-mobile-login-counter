@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import moment from "moment";
 import PadlockIcon from "../../components/icons/PadlockIcon";
 import TextInput from "../../components/commons/TextInput";
+import Spinner from "../../components/commons/Spinner";
 
 import { saveUser, getUser, updateUser } from "./../../services/userService";
 
@@ -27,6 +28,7 @@ const STATUS = {
 const Login = () => {
   const [user, setUser] = useState(emptyUser);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(STATUS.INITIAL);
   const [time, setTime] = useState(TIME);
 
@@ -40,6 +42,7 @@ const Login = () => {
   };
 
   const onSubmit = async (event) => {
+    setLoading(true);
     event.preventDefault();
 
     setStatus(STATUS.SUBMITTING);
@@ -57,7 +60,11 @@ const Login = () => {
         await saveUser(user);
         setStatus(STATUS.COMPLETED);
       }
-    } catch (error) {}
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   function onLogOut() {
@@ -85,6 +92,9 @@ const Login = () => {
     });
   }
 
+  if (error) throw error;
+  if (loading) return <Spinner />;
+
   return (
     <div className='container'>
       {user.email && status === STATUS.COMPLETED ? (
@@ -103,21 +113,21 @@ const Login = () => {
           <form onSubmit={onSubmit}>
             <TextInput
               htmlFor='email'
-              name='email'
               id='email'
-              type='text'
-              placeholder='Email'
-              value={user.email}
+              name='email'
               onChange={onChange}
+              placeholder='Email'
+              type='text'
+              value={user.email}
             />
             <TextInput
               htmlFor='password'
-              name='password'
               id='password'
-              type='password'
-              placeholder='Password'
-              value={user.password}
+              name='password'
               onChange={onChange}
+              placeholder='Password'
+              type='password'
+              value={user.password}
             />
             <button disabled={status === STATUS.SUBMITTING}>Log in</button>
           </form>

@@ -2,26 +2,26 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const TextInput = ({
-  htmlFor,
-  name,
-  id,
-  type,
-  placeholder,
-  value,
-  onChange,
   children,
+  htmlFor,
+  id,
+  name,
+  onChange,
+  placeholder,
+  type,
+  value,
   ...props
 }) => {
   return (
     <div>
       <label htmlFor={htmlFor}></label>
       <input
-        name={name}
         id={id}
-        type={type}
-        placeholder={placeholder}
-        value={value}
+        name={name}
         onChange={onChange}
+        placeholder={placeholder}
+        type={type}
+        value={value}
         {...props}
       >
         {children}
