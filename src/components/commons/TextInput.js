@@ -6,6 +6,7 @@ const TextInput = ({
   htmlFor,
   id,
   name,
+  onBlur,
   onChange,
   placeholder,
   type,
@@ -18,6 +19,7 @@ const TextInput = ({
       <input
         id={id}
         name={name}
+        onBlur={onBlur}
         onChange={onChange}
         placeholder={placeholder}
         type={type}
@@ -33,6 +35,7 @@ const TextInput = ({
 TextInput.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
+  onBlur: PropTypes.func,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   value: PropTypes.string,

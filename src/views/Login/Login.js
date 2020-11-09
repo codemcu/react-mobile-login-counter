@@ -6,6 +6,7 @@ import Spinner from "../../components/commons/Spinner";
 import FeedbackErrors from "../../components/commons/FeedbackErrors";
 
 import { saveUser, getUser, updateUser } from "./../../services/userService";
+import FeedbackInline from "../../components/commons/FeedbackInline";
 
 const emptyUser = {
   email: "",
@@ -32,11 +33,23 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(STATUS.INITIAL);
   const [time, setTime] = useState(TIME);
+  const [touched, setTouched] = useState({});
 
-  const errorsForm = getErrorForm(emptyUser);
+  const errorsForm = getErrorForm(user);
   const isValid = Object.keys(errorsForm).length === 0;
 
-  const onChange = (event) => {
+  const handleBlur = (event) => {
+    event.persist();
+    setTouched((prevState) => {
+      return {
+        ...prevState,
+        [event.target.name]: true,
+      };
+    });
+  };
+
+  const handleChange = (event) => {
+    event.persist();
     setUser((prevState) => {
       return {
         ...prevState,
@@ -133,20 +146,28 @@ const Login = () => {
               htmlFor='email'
               id='email'
               name='email'
-              onChange={onChange}
+              onBlur={handleBlur}
+              onChange={handleChange}
               placeholder='Email'
               type='text'
               value={user.email}
             />
+            {(touched.email || status === STATUS.SUBMITTED) && (
+              <FeedbackInline error={errorsForm.email} />
+            )}
             <TextInput
               htmlFor='password'
               id='password'
               name='password'
-              onChange={onChange}
+              onBlur={handleBlur}
+              onChange={handleChange}
               placeholder='Password'
               type='password'
               value={user.password}
             />
+            {(touched.password || status === STATUS.SUBMITTED) && (
+              <FeedbackInline error={errorsForm.password} />
+            )}
             <button disabled={status === STATUS.SUBMITTING}>Log in</button>
           </form>
         </div>
