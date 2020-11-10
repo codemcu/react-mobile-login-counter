@@ -8,6 +8,8 @@ import FeedbackErrors from "../../components/commons/FeedbackErrors";
 import { saveUser, getUser, updateUser } from "./../../services/userService";
 import FeedbackInline from "../../components/commons/FeedbackInline";
 
+import { emailFormat, passwordFormat } from "./../../../src/utils/utils";
+
 const emptyUser = {
   email: "",
   password: "",
@@ -34,9 +36,13 @@ const Login = () => {
   const [status, setStatus] = useState(STATUS.INITIAL);
   const [time, setTime] = useState(TIME);
   const [touched, setTouched] = useState({});
+  const [validation, setValidation] = useState({});
 
   const errorsForm = getErrorForm(user);
-  const isValid = Object.keys(errorsForm).length === 0;
+  const errorsValidation = getValidationErrors(user);
+  const isValid =
+    Object.keys(errorsForm).length === 0 &&
+    Object.keys(errorsValidation).length === 0;
 
   const handleBlur = (event) => {
     event.persist();
@@ -54,6 +60,15 @@ const Login = () => {
       return {
         ...prevState,
         [event.target.name]: event.target.value,
+      };
+    });
+    setValidation((prevState) => {
+      return {
+        ...prevState,
+        [event.target.name]:
+          event.target.name === "email"
+            ? validationEmail(event.target.value)
+            : validationPassword(event.target.value),
       };
     });
   };
@@ -88,6 +103,13 @@ const Login = () => {
     }
   };
 
+  function validationEmail(email) {
+    return emailFormat.test(email);
+  }
+  function validationPassword(password) {
+    return passwordFormat.test(password);
+  }
+
   function onLogOut() {
     setUser(emptyUser);
     setStatus(STATUS.INITIAL);
@@ -113,10 +135,17 @@ const Login = () => {
     });
   }
 
-  function getErrorForm(user) {
+  function getErrorForm() {
     const result = {};
     if (!user.email) result.email = "email is required";
     if (!user.password) result.password = "password is required";
+    return result;
+  }
+
+  function getValidationErrors() {
+    const result = {};
+    if (!validation.email) result.email = "email format is incorrect";
+    if (!validation.password) result.password = "password format is incorrect";
     return result;
   }
 
@@ -153,7 +182,10 @@ const Login = () => {
               value={user.email}
             />
             {(touched.email || status === STATUS.SUBMITTED) && (
-              <FeedbackInline error={errorsForm.email} />
+              <FeedbackInline
+                error={errorsForm.email}
+                validation={errorsValidation.email}
+              />
             )}
             <TextInput
               htmlFor='password'
@@ -166,9 +198,12 @@ const Login = () => {
               value={user.password}
             />
             {(touched.password || status === STATUS.SUBMITTED) && (
-              <FeedbackInline error={errorsForm.password} />
+              <FeedbackInline
+                error={errorsForm.password}
+                validation={errorsValidation.password}
+              />
             )}
-            <button disabled={status === STATUS.SUBMITTING}>Log in</button>
+            <button disabled={!isValid}>Log in</button>
           </form>
         </div>
       )}
