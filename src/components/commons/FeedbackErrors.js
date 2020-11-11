@@ -14,6 +14,8 @@ const FeedbackErrors = ({ errorsForm }) => {
   );
 };
 
-FeedbackErrors.propTypes = {};
+FeedbackErrors.propTypes = {
+  errorsForm: PropTypes.object,
+};
 
 export default FeedbackErrors;
