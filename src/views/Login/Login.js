@@ -3,31 +3,13 @@ import moment from "moment";
 import PadlockIcon from "../../components/icons/PadlockIcon";
 import TextInput from "../../components/commons/TextInput";
 import Spinner from "../../components/commons/Spinner";
-import FeedbackErrors from "../../components/commons/FeedbackErrors";
+import Welcome from "../Welcome";
 
 import { saveUser, getUser, updateUser } from "./../../services/userService";
 import FeedbackInline from "../../components/commons/FeedbackInline";
 
 import { emailFormat, passwordFormat } from "./../../../src/utils/utils";
-
-const emptyUser = {
-  email: "",
-  password: "",
-};
-
-const TIME = {
-  days: 0,
-  hours: 0,
-  minutes: 0,
-  seconds: 0,
-};
-
-const STATUS = {
-  INITIAL: "INITIAL",
-  SUBMITTING: "SUBMITTING",
-  SUBMITTED: "SUBMITTED",
-  COMPLETED: "COMPLETED",
-};
+import { emptyUser, TIME, STATUS } from "./../../components/commons/constants";
 
 const Login = () => {
   const [user, setUser] = useState(emptyUser);
@@ -114,6 +96,7 @@ const Login = () => {
     setUser(emptyUser);
     setStatus(STATUS.INITIAL);
     setTime(TIME);
+    setTouched({});
   }
 
   function getDifferenceTime(data, timestamp) {
@@ -155,20 +138,9 @@ const Login = () => {
   return (
     <div className='container'>
       {user.email && status === STATUS.COMPLETED ? (
-        <div>
-          <h1>Welcome!</h1>
-          <p>the last time you, {user.email} accesed was:</p>
-          <p>days: {time.days}</p>
-          <p>hours: {time.hours}</p>
-          <p>minutes: {time.minutes}</p>
-          <p>seconds: {time.seconds}</p>
-          <button onClick={onLogOut}>LOGOUT</button>
-        </div>
+        <Welcome user={user} time={time} onLogOut={onLogOut} />
       ) : (
         <div className='form'>
-          {!isValid && status === STATUS.SUBMITTED && (
-            <FeedbackErrors errorsForm={errorsForm} />
-          )}
           <PadlockIcon />
           <form onSubmit={onSubmit}>
             <TextInput
@@ -203,7 +175,9 @@ const Login = () => {
                 validation={errorsValidation.password}
               />
             )}
-            <button disabled={!isValid}>Log in</button>
+            <button type='submit' disabled={!isValid}>
+              Log in
+            </button>
           </form>
         </div>
       )}
