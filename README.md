@@ -10,6 +10,15 @@ the `json-server` has set `--delay 1500` to simulate a real call to the backend 
 
 Open http://localhost:3000 to view it in the browser<br /> and http://localhost:3001/users to see json users list
 
+> for password validation you need a 4 character word
+>
+> - a capital letter,
+> - a lowercase
+> - one digit
+> - a numerical character
+>
+> example: !2Ws
+
 ## `npm run build`
 
 Builds the app for production to the `build` folder.<br />
