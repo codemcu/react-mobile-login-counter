@@ -2,21 +2,15 @@
   "users": [
     {
       "email": "eve.holt@reqres.in",
-      "password": "123",
-      "timestamp": 1604748100335,
+      "password": "!2Ws",
+      "timestamp": 1605194091661,
       "id": 1
     },
     {
       "email": "javier.roura@grifols.com",
-      "password": "123",
+      "password": "!2Ws",
       "timestamp": 1604656165141,
       "id": 2
-    },
-    {
-      "email": "mauricio.correa@soprasteria.com",
-      "password": "123",
-      "timestamp": 1604664284928,
-      "id": 3
     }
   ]
 }
