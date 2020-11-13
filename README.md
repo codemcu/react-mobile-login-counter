@@ -1,5 +1,11 @@
 # Mobile Login Counter
 
+<img width="200" alt="Captura de pantalla 2020-11-13 a las 10 11 51" src="https://user-images.githubusercontent.com/6061416/99051837-ced11e00-2598-11eb-8dd0-d0dbd9885a6c.png">
+
+<img width="200" alt="Captura de pantalla 2020-11-13 a las 10 11 32" src="https://user-images.githubusercontent.com/6061416/99052271-ed371980-2598-11eb-9b02-f95d9423c155.png">
+
+## Description
+
 It is a progressive web mobile app that allows us to log in with different users and shows us a counter with the time that has passed since the user's last access to the web
 
 ## `npm start`
